@@ -1,6 +1,3 @@
-let screenValue = document.querySelector(".screen");
-screenValue.innerHTML = "";
-
 function multiply(a, b) {
   return a * b;
 }
@@ -30,8 +27,7 @@ function executeExpression(parts, operator, func) {
   ];
 }
 
-function calculate() {
-  const value = screenValue.innerHTML;
+function calculate(value) {
   let parts = value.split(/(?<=\D)(?=\d)|(?<=\d)(?=\D)/);
 
   // handle divide & multiple first
@@ -58,11 +54,19 @@ function calculate() {
     }
   }
 
-  screenValue.innerHTML = parts.join(" ");
+  return parts.join("");
+}
+
+function paint(screen, value) {
+  screen.innerHTML = value;
 }
 
 // init() to initialize handlers
 function init() {
+  let screenValue = "";
+  let screen = document.querySelector(".screen");
+  paint(screen, screenValue);
+
   document
     .querySelector(".calculator-buttons")
     .addEventListener("click", (event) => {
@@ -70,21 +74,20 @@ function init() {
 
       switch (buttonValue) {
         case "C":
-          screenValue.innerHTML = "";
+          screenValue = "";
           break;
         case "=":
-          calculate(screenValue.innerHTML);
+          screenValue = calculate(screenValue);
           break;
         case "←":
-          screenValue.innerHTML = screenValue.innerHTML.substring(
-            0,
-            screenValue.innerHTML.length - 1,
-          );
+          screenValue = screenValue.substring(0, screenValue.length - 1);
           break;
         default:
-          screenValue.innerHTML += buttonValue;
+          screenValue += buttonValue;
           break;
       }
+
+      paint(screen, screenValue);
     });
 }
 
