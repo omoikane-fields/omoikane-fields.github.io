@@ -1,8 +1,6 @@
 let screenValue = document.querySelector(".screen");
 screenValue.innerHTML = "";
 
-const buttons = document.querySelectorAll("button");
-
 function multiply(a, b) {
   return a * b;
 }
@@ -63,26 +61,31 @@ function calculate() {
   screenValue.innerHTML = parts.join(" ");
 }
 
-buttons.forEach((button) => {
-  button.addEventListener("click", (event) => {
-    const buttonValue = event.target.innerHTML;
+// init() to initialize handlers
+function init() {
+  document
+    .querySelector(".calculator-buttons")
+    .addEventListener("click", (event) => {
+      const buttonValue = event.target.innerHTML;
 
-    switch (buttonValue) {
-      case "C":
-        screenValue.innerHTML = "";
-        break;
-      case "=":
-        calculate(screenValue.innerHTML);
-        break;
-      case "←":
-        screenValue.innerHTML = screenValue.innerHTML.substring(
-          0,
-          screenValue.innerHTML.length - 1,
-        );
-        break;
-      default:
-        screenValue.innerHTML += buttonValue;
-        break;
-    }
-  });
-});
+      switch (buttonValue) {
+        case "C":
+          screenValue.innerHTML = "";
+          break;
+        case "=":
+          calculate(screenValue.innerHTML);
+          break;
+        case "←":
+          screenValue.innerHTML = screenValue.innerHTML.substring(
+            0,
+            screenValue.innerHTML.length - 1,
+          );
+          break;
+        default:
+          screenValue.innerHTML += buttonValue;
+          break;
+      }
+    });
+}
+
+init();
