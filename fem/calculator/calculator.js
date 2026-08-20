@@ -64,7 +64,7 @@ function paint(screen, value) {
 // init() to initialize handlers
 function init() {
   let screenValue = "";
-  let screen = document.querySelector(".screen");
+  const screen = document.querySelector(".screen");
   paint(screen, screenValue);
 
   document
@@ -83,8 +83,25 @@ function init() {
           screenValue = screenValue.substring(0, screenValue.length - 1);
           break;
         default:
+          /* TODO:
+           * calculator isn't complete:
+           *   * 0+0000000 is allowed
+           *   * -8 + 7 results in infinite loop
+           */
+
+          if (isNaN(parseInt(buttonValue))) {
+            // we don't allow continguous operators, override it
+            if (isNaN(parseInt(screenValue.charAt(screenValue.length - 1)))) {
+              screenValue = screenValue.slice(0, -1) + buttonValue;
+              break;
+            }
+          } else if (screenValue[0] === "0" && screenValue.length === 1) {
+            // allow 0 to change to some other value
+            screenValue = buttonValue;
+            break;
+          }
+
           screenValue += buttonValue;
-          break;
       }
 
       paint(screen, screenValue);
