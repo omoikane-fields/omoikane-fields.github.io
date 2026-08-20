@@ -65,7 +65,6 @@ function calculate() {
 
 buttons.forEach((button) => {
   button.addEventListener("click", (event) => {
-    console.log("Element clicked " + event.target.innerHTML);
     const buttonValue = event.target.innerHTML;
 
     switch (buttonValue) {
