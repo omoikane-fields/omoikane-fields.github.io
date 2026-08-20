@@ -8,6 +8,7 @@ body {
     align-items: stretch; /* Changed from 'center' to 'stretch' to force children full height */
     background-color: #995522;
     height: 50px;
+    margin-bottom: 20px;
 }
 
 .nav-items {
