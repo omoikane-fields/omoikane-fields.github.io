@@ -31,10 +31,20 @@ body {
     font-size: 40px;
     text-transform: uppercase;
     font-weight: bold;
+    text-shadow:
+        -1px -1px 0 gray,
+         1px -1px 0 gray,
+        -1px  1px 0 gray,
+         1px  1px 0 gray; /* Creates the outline */
 }
 
 .exact-match{
     background-color: green;
+    color: white;
+}
+
+.match {
+    background-color: rgb(250, 238, 0);
     color: white;
 }
 

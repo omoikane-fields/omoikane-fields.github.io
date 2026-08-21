@@ -35,6 +35,31 @@ async function isAWord(guess) {
   const data = await response.json();
 }
 
+function checkMatches(word, inputs) {
+  let charCounts = {};
+  let seenCounts = {};
+  const wordChars = word.split(""); // all characters of the word
+
+  // check exact matches first, remove wordChars that match
+  inputs.forEach((input, index) => {
+    if (input.value === word[index]) {
+      input.classList.add("exact-match");
+      const index = wordChars.indexOf(input.value);
+      if (index !== -1) wordChars.splice(index, 1);
+    }
+  });
+
+  inputs.forEach((input, index) => {
+    if (word.includes(input.value) && wordChars.indexOf(input.value) != -1) {
+      input.classList.add("match");
+      const index = wordChars.indexOf(input.value);
+      if (index !== -1) wordChars.splice(index, 1);
+    } else if (input.value !== word[index]) {
+      input.classList.add("mismatch");
+    }
+  });
+}
+
 function getUserGuess(inputs) {
   return [...inputs].map((inp) => inp.value).join("");
 }
@@ -45,7 +70,6 @@ function lockRow(inputs) {
 
 async function init() {
   const word = await getWordOfTheDay();
-  console.log("word: ", word);
   const rows = document.querySelectorAll(".row");
 
   rows.forEach((row, index) => {
@@ -74,12 +98,14 @@ async function init() {
             // now check
             switch (true) {
               case guess === word:
+                checkMatches(word, inputs);
                 alert("you win!");
               default:
                 rowIndex = Array.from(rows).indexOf(row);
                 if (rowIndex >= rows.length - 1) {
                   alert("you lose!");
                 } else {
+                  checkMatches(word, inputs);
                   const nextRow = rows[rowIndex + 1];
                   nextRow.querySelector(".letter").focus();
                 }
