@@ -13,6 +13,10 @@ body {
     gap: 20px;
 }
 
+.invalid-word {
+    border: 3px solid red;
+}
+
 .row:not(:last-child) {
     margin-bottom: 12px;
 }

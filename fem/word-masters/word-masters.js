@@ -33,6 +33,7 @@ async function isAWord(guess) {
   });
 
   const data = await response.json();
+  return data.validWord;
 }
 
 function checkMatches(word, inputs) {
@@ -60,8 +61,11 @@ function checkMatches(word, inputs) {
   });
 }
 
-function getUserGuess(inputs) {
-  return [...inputs].map((inp) => inp.value).join("");
+async function getUserGuess(inputs) {
+  const word = [...inputs].map((inp) => inp.value).join("");
+  const validWord = await isAWord(word);
+
+  return [word, validWord];
 }
 
 function lockRow(inputs) {
@@ -81,7 +85,7 @@ async function init() {
       inputs.forEach((input) => (input.readOnly = true));
     }
 
-    row.addEventListener("keydown", function (e) {
+    row.addEventListener("keydown", async function (e) {
       if (e.target.readOnly) return;
       if (!e.target.classList.contains("letter")) return;
       const index = Array.from(inputs).indexOf(e.target);
@@ -98,27 +102,33 @@ async function init() {
           }
           return;
         case "Enter":
-          guess = getUserGuess(inputs);
-          if (guess.length == 5) {
-            lockRow(inputs);
-            // now check
-            switch (true) {
-              case guess === word:
+          const [guess, valid] = await getUserGuess(inputs);
+          if (guess.length < 5) return;
+
+          lockRow(inputs);
+
+          console.log("guess: ", guess, " valid: ", valid);
+          if (!valid) {
+            row.classList.add("invalid-word");
+          }
+
+          // now check
+          switch (true) {
+            case guess === word:
+              checkMatches(word, inputs);
+              alert("you win!");
+            default:
+              rowIndex = Array.from(rows).indexOf(row);
+              if (rowIndex >= rows.length - 1) {
+                alert("you lose!");
+              } else {
                 checkMatches(word, inputs);
-                alert("you win!");
-              default:
-                rowIndex = Array.from(rows).indexOf(row);
-                if (rowIndex >= rows.length - 1) {
-                  alert("you lose!");
-                } else {
-                  checkMatches(word, inputs);
-                  const nextRow = rows[rowIndex + 1];
-                  nextRow.querySelector(".letter").focus();
-                  nextRow
-                    .querySelectorAll(".letter")
-                    .forEach((input) => (input.readOnly = false));
-                }
-            }
+                const nextRow = rows[rowIndex + 1];
+                nextRow.querySelector(".letter").focus();
+                nextRow
+                  .querySelectorAll(".letter")
+                  .forEach((input) => (input.readOnly = false));
+              }
           }
           break;
       }
