@@ -32,3 +32,13 @@ body {
     text-transform: uppercase;
     font-weight: bold;
 }
+
+.exact-match{
+    background-color: green;
+    color: white;
+}
+
+.mismatch {
+    background-color: gray;
+    color: white;
+}

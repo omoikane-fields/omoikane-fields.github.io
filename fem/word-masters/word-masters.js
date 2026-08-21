@@ -2,7 +2,50 @@ function isLetter(letter) {
   return /^[a-zA-Z]$/.test(letter);
 }
 
-function init() {
+// get words of the day
+// https://words.dev-apis.com/word-of-the-day
+
+const WOD_URL = "https://words.dev-apis.com/word-of-the-day";
+const VALIDATE_URL = "https://words.dev-apis.com/validate-word";
+
+async function getWordOfTheDay() {
+  try {
+    const response = await fetch(WOD_URL);
+    // Check for HTTP errors
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.word;
+  } catch (error) {
+    console.error("Failed to fetch Word of the Day:", error);
+    return null;
+  }
+}
+
+async function isAWord(guess) {
+  const response = await fetch(VALIDATE_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      word: guess,
+    }),
+  });
+
+  const data = await response.json();
+}
+
+function getUserGuess(inputs) {
+  return [...inputs].map((inp) => inp.value).join("");
+}
+
+function lockRow(inputs) {
+  inputs.forEach((inp) => (inp.disabled = true));
+}
+
+async function init() {
+  const word = await getWordOfTheDay();
+  console.log("word: ", word);
   const rows = document.querySelectorAll(".row");
 
   rows.forEach((row, index) => {
@@ -12,37 +55,50 @@ function init() {
       if (!e.target.classList.contains("letter")) return;
       const index = Array.from(inputs).indexOf(e.target);
 
-      if (e.key === "Backspace") {
-        if (e.target.value) {
-          // inside
-        } else {
-          if (index > 0) {
-            inputs[index - 1].focus();
+      switch (e.key) {
+        case "Backspace":
+          if (e.target.value) {
+            // inside the cell that has value
+            // remove that value and stay in cell.
+          } else {
+            if (index > 0) {
+              inputs[index - 1].focus();
+            }
           }
-        }
-        return;
+          return;
+        case "Enter":
+          guess = getUserGuess(inputs);
+          console.log("guess: ", guess, "len: ", guess.length);
+          if (guess.length == 5) {
+            lockRow(inputs);
+            // now check
+            switch (true) {
+              case guess === word:
+                alert("you win!");
+              default:
+                rowIndex = Array.from(rows).indexOf(row);
+                if (rowIndex >= rows.length - 1) {
+                  alert("you lose!");
+                } else {
+                  const nextRow = rows[rowIndex + 1];
+                  nextRow.querySelector(".letter").focus();
+                }
+            }
+          }
+          break;
       }
+
+      e.preventDefault();
 
       if (!isLetter(e.key)) {
-        e.preventDefault();
         return;
       }
 
-      if (e.key.length === 1) {
-        e.preventDefault();
-        e.target.value = e.key; // replace with new letter
+      e.target.value = e.key; // replace with new letter
 
-        if (index < inputs.length - 1) {
-          inputs[index + 1].focus();
-        }
-
-        if ([...inputs].every((inp) => inp.value)) {
-          inputs.forEach((inp) => (inp.disabled = true));
-          console.log("Row complete, locked.");
-          // verify if word
-          // mark letters
-          // proceed to next line
-        }
+      // move to next cell.
+      if (index < inputs.length - 1) {
+        inputs[index + 1].focus();
       }
     });
   });
