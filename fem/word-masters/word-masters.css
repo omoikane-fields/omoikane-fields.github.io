@@ -11,6 +11,9 @@ body {
     display: flex;
     justify-content: center;
     gap: 20px;
+    width: fit-content;
+    border: 3px solid transparent; /* reserve space */
+    margin: 0 auto;
 }
 
 .invalid-word {
@@ -18,12 +21,35 @@ body {
 }
 
 .row:not(:last-child) {
-    margin-bottom: 12px;
+    margin-bottom: 9px;
 }
 
 /* TODO: may move this to shared */
 .game {
     margin: 100px;
+    position: relative;
+}
+
+.game-over {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%); /* adjust for own width */
+    top: 0px;
+    font-size: 80px;
+    text-align: center;
+    background-color: rgba(128, 128, 128, 0.8); /* black with 50% transparency */
+    height: 100%;
+    padding: 50px;
+    color: white;
+}
+
+.hidden {
+    display: none;
+}
+
+.play-again {
+    width: 80%;
+    height: 50px;
 }
 
 .letter{

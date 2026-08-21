@@ -75,6 +75,7 @@ function lockRow(inputs) {
 async function init() {
   const word = await getWordOfTheDay();
   const rows = document.querySelectorAll(".row");
+  const gameOver = document.querySelector(".game-over");
 
   // set focus on first row and letter
   rows[0].querySelector(".letter").focus();
@@ -116,11 +117,13 @@ async function init() {
           switch (true) {
             case guess === word:
               checkMatches(word, inputs);
-              alert("you win!");
+              gameOver.classList.remove("hidden");
+              gameOver.querySelector(".won").classList.remove("hidden");
             default:
               rowIndex = Array.from(rows).indexOf(row);
               if (rowIndex >= rows.length - 1) {
-                alert("you lose!");
+                gameOver.classList.remove("hidden");
+                gameOver.querySelector(".lost").classList.remove("hidden");
               } else {
                 checkMatches(word, inputs);
                 const nextRow = rows[rowIndex + 1];
