@@ -72,10 +72,17 @@ async function init() {
   const word = await getWordOfTheDay();
   const rows = document.querySelectorAll(".row");
 
+  // set focus on first row and letter
+  rows[0].querySelector(".letter").focus();
+
   rows.forEach((row, index) => {
     const inputs = row.querySelectorAll(".letter");
+    if (index > 0) {
+      inputs.forEach((input) => (input.readOnly = true));
+    }
 
     row.addEventListener("keydown", function (e) {
+      if (e.target.readOnly) return;
       if (!e.target.classList.contains("letter")) return;
       const index = Array.from(inputs).indexOf(e.target);
 
@@ -92,7 +99,6 @@ async function init() {
           return;
         case "Enter":
           guess = getUserGuess(inputs);
-          console.log("guess: ", guess, "len: ", guess.length);
           if (guess.length == 5) {
             lockRow(inputs);
             // now check
@@ -108,6 +114,9 @@ async function init() {
                   checkMatches(word, inputs);
                   const nextRow = rows[rowIndex + 1];
                   nextRow.querySelector(".letter").focus();
+                  nextRow
+                    .querySelectorAll(".letter")
+                    .forEach((input) => (input.readOnly = false));
                 }
             }
           }
