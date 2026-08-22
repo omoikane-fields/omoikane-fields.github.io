@@ -72,6 +72,17 @@ function lockRow(inputs) {
   inputs.forEach((inp) => (inp.disabled = true));
 }
 
+function backspace(event, inputs, index) {
+  if (event.target.value) {
+    // inside the cell that has value
+    // remove that value and stay in cell.
+  } else {
+    if (index > 0) {
+      inputs[index - 1].focus();
+    }
+  }
+}
+
 async function init() {
   const word = await getWordOfTheDay();
   const title = document.querySelector(".title");
@@ -87,21 +98,14 @@ async function init() {
       inputs.forEach((input) => (input.readOnly = true));
     }
 
-    row.addEventListener("keydown", async function (e) {
+    row.addEventListener("keydown", async function handleKeyPress(e) {
       if (e.target.readOnly) return;
       if (!e.target.classList.contains("letter")) return;
       const index = Array.from(inputs).indexOf(e.target);
 
       switch (e.key) {
         case "Backspace":
-          if (e.target.value) {
-            // inside the cell that has value
-            // remove that value and stay in cell.
-          } else {
-            if (index > 0) {
-              inputs[index - 1].focus();
-            }
-          }
+          backspace(event, inputs, index);
           return;
         case "Enter":
           const [guess, valid] = await getUserGuess(inputs);
@@ -109,7 +113,6 @@ async function init() {
 
           lockRow(inputs);
 
-          console.log("guess: ", guess, " valid: ", valid);
           if (!valid) {
             row.classList.add("invalid-word");
           }
