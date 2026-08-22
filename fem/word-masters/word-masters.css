@@ -82,3 +82,48 @@ body {
     background-color: gray;
     color: white;
 }
+
+/* winner animation */
+@keyframes rainbow {
+    100%,
+    0% {
+        color: #f00;
+    }
+    8% {
+        color: #f80;
+    }
+    16% {
+        color: #ff0;
+    }
+    25% {
+        color: #7F0;
+    }
+    33% {
+        color: #0f0;
+    }
+    41% {
+        color: #0f7;
+    }
+    50% {
+        color: #0ff;
+    }
+    58% {
+        color: #07f;
+    }
+    66% {
+        color: #00f;
+    }
+    75% {
+        color: #70f;
+    }
+    83% {
+        color: #f0f;
+    }
+    91% {
+        color: #f07;
+    }
+}
+
+.winner {
+    animation: rainbow 4s infinite linear;
+}
