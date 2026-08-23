@@ -11,10 +11,20 @@
     href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="portfolio.css">
+  <link rel="stylesheet" href="switch.css">
 </head>
 
 <body>
   <section class="wrapper">
+    <header>
+      <fieldset id="mode-switcher" class="radio-switch">
+        <legend>Select a color mode</legend>
+        <input type="radio" id="light" name="color-scheme" value="light" checked />
+        <label for="light">Light</label>
+        <input type="radio" id="dark" name="color-scheme" value="dark" />
+        <label for="dark">Dark</label>
+      </fieldset>
+    </header>
     <article class="main-article">
       <div class="text">
         <h2>Frontend Developer</h2>

@@ -13,11 +13,24 @@
   --corners: 24px 0;
   --corners-sm: 10px 0;
   --base-font-size: 1rem;
+  --ld-bkgd: light-dark(var(--avacado),var(--darkgray));
+  --ld-text: light-dark(var(--darkgray),var(--white));
+  --ld-projects: light-dark(var(--white),var(--teal));
+  --ld-blue: light-dark(var(--darkteal),var(--lightteal));
 }
 /* set the box sizing to border-box for layouts */
 html {
   box-sizing: border-box;
+  color-scheme: light dark; /* auto switch light dark according to O.S. color scheme */
 }
+/* uses user selection instead of auto light dark */
+html:has(#mode-switcher #light:checked) {
+  color-scheme: light;
+}
+html:has(#mode-switcher #dark:checked) {
+  color-scheme: dark;
+}
+
 *,
 *::before,
 *::after {
@@ -27,8 +40,8 @@ html {
 body {
   font-size: var(--base-font-size);
   font-family: "Inter", sans-serif;
-  background-color: var(--avacado);
-  color: var(--darkgray);
+  background-color: var(--ld-bkgd);
+  color: var(--ld-text);
 }
 
 .wrapper {
@@ -45,7 +58,7 @@ h2 {
   margin: 0; /* indentation between headers are linked */
   font-size: var(--base-font-size);
   text-transform: uppercase;
-  color: var(--blue);
+  color: var(--ld-blue);
   letter-spacing: 0.25em;
 }
 h3 {
@@ -55,7 +68,7 @@ p {
   line-height: 1.5;
 }
 a {
-  color: var(--darkteal);
+  color: var(--ld-blue);
 }
 a:hover {
   color: var(--marina);
@@ -81,7 +94,7 @@ ul svg {
   height: 36px;
 }
 .social {
-  fill: var(--darkteal); /* svg specific, fill color with darkteal */
+  fill: var(--ld-blue); /* svg specific, fill color with darkteal */
 }
 .social:hover {
   fill: var(--marina);
@@ -127,7 +140,7 @@ footer {
   margin: 2rem 0;
 }
 .footer-icons .social {
-  fill: var(--darkgray);
+  fill: var(--ld-text);
 }
 .footer-icons .social:hover{
   fill: var(--marina);
@@ -141,7 +154,7 @@ main {
 }
 
 .project {
-  background-color: var(--white);
+  background-color: var(--ld-projects);
   padding: 3rem;
   border-radius: var(--corners);
   display: grid;
@@ -180,6 +193,17 @@ main {
 .img-border {
 border: 1px solid var(--darkgray);
 }
+
+/* light dark buttons */
+/* changed */
+/* fieldset {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 3rem;
+  max-width: 300px;
+  margin: 0 0 5rem auto;
+} */
 
 /* responsive design
 * min-width >= 750, display two columns
@@ -228,6 +252,10 @@ border: 1px solid var(--darkgray);
 
   .footer-text .icons {
     grid-column: 1/4;
+  }
+
+  .radio-switch {
+    justify-content: flex-end;
   }
 }
 
