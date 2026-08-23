@@ -102,6 +102,35 @@ ul svg {
   overflow: hidden;
 }
 
+/* footer styling */
+footer {
+  text-align: center;
+}
+.footer-text {
+  line-height: 1.5;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+.footer-text-box ul {
+  font-size: calc(var(--base-font-size) * 0.85);
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.footer-text-box li {
+  line-height: 2;
+}
+.h2-footer {
+  margin: 2rem 0;
+}
+.footer-icons .social {
+  fill: var(--darkgray);
+}
+.footer-icons .social:hover{
+  fill: var(--marina);
+}
+
 /* responsive design
 * min-width >= 750, display two columns
 */
@@ -138,5 +167,12 @@ ul svg {
 
   .icons {
    justify-content: flex-start; /* push icons to left */
+  }
+
+  footer {
+    text-align: left;
+  }
+  .footer-text {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
