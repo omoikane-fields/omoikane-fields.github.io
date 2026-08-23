@@ -1,5 +1,6 @@
 /* starting variables for the site */
 :root {
+  --white: #ffffff;
   --darkgray: #2D3F54;
   --gray: #52647A;
   --avacado: #73CC80;
@@ -10,6 +11,7 @@
   --teal: #0FA69D;
   --darkteal: #028183;
   --corners: 24px 0;
+  --corners-sm: 10px 0;
   --base-font-size: 1rem;
 }
 /* set the box sizing to border-box for layouts */
@@ -131,6 +133,54 @@ footer {
   fill: var(--marina);
 }
 
+/* projects section */
+main {
+  margin-top: 5rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.project {
+  background-color: var(--white);
+  padding: 3rem;
+  border-radius: var(--corners);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;;
+}
+
+.projects {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 3rem;
+}
+
+.project ul {
+  margin: 0px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 1em;
+}
+
+.project li {
+  border-radius: var(--corners-sm);
+  background-color: var(--marina);
+  color: var(--white);
+  padding: 0.5rem;
+  font-size: calc(var(--base-font-size) * 0.85);
+}
+
+.project img {
+  grid-row: 1/2;
+}
+
+.img-border {
+border: 1px solid var(--darkgray);
+}
+
 /* responsive design
 * min-width >= 750, display two columns
 */
@@ -174,5 +224,27 @@ footer {
   }
   .footer-text {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .footer-text .icons {
+    grid-column: 1/4;
+  }
+}
+
+@media (min-width: 850px) {
+  main {
+    text-align: left;
+  }
+
+  .project {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .project img {
+    grid-row: auto;
+  }
+
+  .project ul {
+    justify-content: flex-start;
   }
 }
