@@ -7,6 +7,7 @@ function isLetter(letter) {
 
 const WOD_URL = "https://words.dev-apis.com/word-of-the-day";
 const VALIDATE_URL = "https://words.dev-apis.com/validate-word";
+const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
 
 async function getWordOfTheDay() {
   try {
@@ -68,6 +69,42 @@ async function getUserGuess(inputs) {
   return [word, validWord];
 }
 
+async function enter(inputs, row, word, rows, gameOver, title) {
+  const [guess, valid] = await getUserGuess(inputs);
+  if (guess.length < 5) return;
+
+  lockRow(inputs);
+
+  if (!valid) {
+    row.classList.add("invalid-word");
+  }
+
+  // now check
+  switch (true) {
+    case guess === word:
+      // winner!!!!
+      checkMatches(word, inputs);
+      gameOver.classList.remove("hidden");
+      gameOver.querySelector(".won").classList.remove("hidden");
+      title.classList.add("winner");
+    default:
+      const rowIndex = Array.from(rows).indexOf(row);
+      if (rowIndex >= rows.length - 1) {
+        // loser !!!
+        gameOver.classList.remove("hidden");
+        gameOver.querySelector(".lost").classList.remove("hidden");
+      } else {
+        // wrong guess
+        checkMatches(word, inputs);
+        const nextRow = rows[rowIndex + 1];
+        nextRow.querySelector(".letter").focus();
+        nextRow
+          .querySelectorAll(".letter")
+          .forEach((input) => (input.readOnly = false));
+      }
+  }
+}
+
 function lockRow(inputs) {
   inputs.forEach((inp) => (inp.disabled = true));
 }
@@ -99,48 +136,49 @@ async function init() {
     }
 
     row.addEventListener("keydown", async function handleKeyPress(e) {
+      if (isTouchDevice && document.activeElement.tagName === "INPUT") return; // Skip if mobile input is active
+
       if (e.target.readOnly) return;
       if (!e.target.classList.contains("letter")) return;
       const index = Array.from(inputs).indexOf(e.target);
 
       switch (e.key) {
         case "Backspace":
-          backspace(event, inputs, index);
+          backspace(e, inputs, index);
           return;
         case "Enter":
-          const [guess, valid] = await getUserGuess(inputs);
-          if (guess.length < 5) return;
+          await enter(inputs, row, word, rows, gameOver, title);
+          break;
+      }
 
-          lockRow(inputs);
+      e.preventDefault();
 
-          if (!valid) {
-            row.classList.add("invalid-word");
-          }
+      if (!isLetter(e.key)) {
+        return;
+      }
 
-          // now check
-          switch (true) {
-            case guess === word:
-              // winner!!!!
-              checkMatches(word, inputs);
-              gameOver.classList.remove("hidden");
-              gameOver.querySelector(".won").classList.remove("hidden");
-              title.classList.add("winner");
-            default:
-              rowIndex = Array.from(rows).indexOf(row);
-              if (rowIndex >= rows.length - 1) {
-                // loser !!!
-                gameOver.classList.remove("hidden");
-                gameOver.querySelector(".lost").classList.remove("hidden");
-              } else {
-                // wrong guess
-                checkMatches(word, inputs);
-                const nextRow = rows[rowIndex + 1];
-                nextRow.querySelector(".letter").focus();
-                nextRow
-                  .querySelectorAll(".letter")
-                  .forEach((input) => (input.readOnly = false));
-              }
-          }
+      e.target.value = e.key; // replace with new letter
+
+      // move to next cell.
+      if (index < inputs.length - 1) {
+        inputs[index + 1].focus();
+      }
+    });
+
+    /* for mobile devices we need input event */
+    row.addEventListener("input", async function handleKeyPress(e) {
+      if (isTouchDevice && document.activeElement.tagName === "INPUT") return; // Skip if mobile input is active
+
+      if (e.target.readOnly) return;
+      if (!e.target.classList.contains("letter")) return;
+      const index = Array.from(inputs).indexOf(e.target);
+
+      switch (e.key) {
+        case "Backspace":
+          backspace(e, inputs, index);
+          return;
+        case "Enter":
+          await enter(inputs, row, word, rows, gameOver, title);
           break;
       }
 
